@@ -77,7 +77,7 @@
       },
       initAliasFiles () {
         let _this = this
-        ipcRenderer.send('load-alias-files', 'ping')
+        ipcRenderer.send('load-alias-files')
         ipcRenderer.on('loaded-alias-files', (event, files) => {
           _this.files = files
           this.setCurrentFile(_this.files[0])
@@ -86,6 +86,7 @@
     },
     mounted () {
       this.initAliasFiles()
+      ipcRenderer.send('init-files')
     }
   }
 </script>
@@ -100,6 +101,7 @@
         left: 0;
         display: flex;
     }
+
     .ec-aside {
         width: 200px;
         color: #fff;

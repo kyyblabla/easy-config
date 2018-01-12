@@ -1,7 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain } from 'electron'
-import { loadAliasFiles, saveAliasFile } from './aliasFileUtil'
+import { loadAliasFiles, saveAliasFileIndex, saveAliasFile } from './aliasFileUtil'
 
 /**
  * Set `__static` path to static files in production
@@ -55,6 +55,11 @@ ipcMain.on('load-alias-files', (event) => {
 ipcMain.on('save-alias-file', (event, aliasFile) => {
   saveAliasFile(aliasFile)
   event.sender.send('saved-alias-file')
+})
+
+ipcMain.on('save-alias-file-index', (event, aliasFiles) => {
+  saveAliasFileIndex(aliasFiles)
+  event.sender.send('saved-alias-file-index')
 })
 
 /**

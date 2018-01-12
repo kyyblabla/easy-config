@@ -5,18 +5,32 @@ let _realPath = (fileName) => {
   return config.aliasFilePath + '/' + fileName
 }
 
+let _writeFile = (pathName, content) => {
+  let path = pathName.replace(/\/[^/]*$/, '')
+  if (!fs.existsSync(path)) {
+    fs.mkdirSync(path)
+  }
+  fs.writeFileSync(pathName, content, 'utf-8')
+}
+
+let _getAlisFileIndex = () => {
+  if (!fs.existsSync(config.aliasFileIndexPath)) {
+    return []
+  }
+  let content = fs.readFileSync(config.aliasFileIndexPath)
+  return JSON.parse(content)
+}
+
 export function loadAliasFiles () {
-  let files = fs.readdirSync(config.aliasFilePath)
-  let fileWithContent = files.filter((f) => {
-    return fs.statSync(_realPath(f)).isFile()
-  }).map((f) => {
-    let text = fs.readFileSync(_realPath(f), 'utf-8')
+  return _getAlisFileIndex().map(({path, title, use}) => {
+    let text = fs.readFileSync(path, 'utf-8')
     return {
-      title: f,
-      text
+      title,
+      text,
+      content: text,
+      path
     }
   })
-  return fileWithContent
 }
 
 export function saveAliasFile ({title, newTitle, text}) {
@@ -24,5 +38,9 @@ export function saveAliasFile ({title, newTitle, text}) {
     fs.renameSync(_realPath(title), _realPath(newTitle))
     title = newTitle
   }
-  fs.writeFileSync(_realPath(title), text, 'utf-8')
+  _writeFile(_realPath(title), text)
+}
+
+export function saveAliasFileIndex (files) {
+  _writeFile(config.aliasFileIndexPath, JSON.stringify(files || []))
 }
