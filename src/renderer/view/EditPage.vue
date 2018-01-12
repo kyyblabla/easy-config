@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="ex-edit-page">
         <el-container>
             <el-aside class="ec-aside" width="200px">
                 <div class="ec-title">
@@ -69,7 +69,6 @@
         this.currentFile.newTitle = this.currentFile.title
       },
       saveAliasFile () {
-        console.log(this.currentFile)
         let _this = this
         ipcRenderer.send('save-alias-file', this.currentFile)
         ipcRenderer.on('saved-alias-file', () => {
@@ -93,9 +92,16 @@
 <style lang="less" rel="stylesheet/less">
     @main-height: 60px;
     @menu-item-height: 50px;
+    #ex-edit-page {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+    }
     .ec-aside {
         width: 200px;
-        height: 500px;
         color: #fff;
         background-color: #303133;
         ul.el-menu {
